@@ -8,7 +8,7 @@ import nil_lib as ks
 
 
 def net_map(
-    core_switch_ip,
+    target_switch,
     user,
     site_code=None,
     port_display=None,
@@ -25,17 +25,17 @@ def net_map(
         counter = 0
 
     switch_list_cdp, switch_list_errored = net_map_cdp(
-        core_switch_ip,
+        target_switch,
         user,
         pwd=pwd
     )
 
     if not switch_list_cdp:
-        print(f'Could not connect to core {core_switch_ip}!')
+        print(f'Could not connect to the main switch {target_switch}!')
         return
 
     detected_switch_list = [{
-        'host': core_switch_ip,
+        'host': target_switch,
         'hostname': switch_list_cdp[0]['name']
     }]
 
