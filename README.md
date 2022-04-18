@@ -16,7 +16,7 @@ net_map(
 ##### Outputs:
 Will generate the following folders and files.
 
-    *site_info/test/test.yaml* -> Used as a database of switches for the site
+*site_info/test/test.yaml* -> Used as a database of switches for the site
 ```yaml
 Switchlist:
 - hostname: test-sw-c2960x-01
@@ -67,7 +67,7 @@ Ignorelist: null
 ```
 
 
-    *site_info/test/test_cyto.json* -> Used in cyto_map_server to create physical map
+*site_info/test/test_cyto.json* -> Used in cyto_map_server to create physical map
 ```json
 {
  "data": [],
@@ -124,7 +124,8 @@ Ignorelist: null
 }
 ```
 
-    *site_info/test/test_debug.yml* -> Used in debugging switch connections
+
+*site_info/test/test_debug.yml* -> Used in debugging switch connections
 ```yaml
 detected:
 - host: 10.10.10.10
