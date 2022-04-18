@@ -262,7 +262,7 @@ def net_map_yaml(site_code, switch_list_cdp):
         site_code,
         file_dir,
         inventory_list,
-        file_extension='yaml'
+        file_extension='yml'
     )
 
 
@@ -335,7 +335,7 @@ def net_map_test_output(
         file_name,
         f'site_info/{site_code}/',
         data,
-        file_extension='yaml',
+        file_extension='yml',
         override=True
     )
 
