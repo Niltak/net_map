@@ -110,13 +110,13 @@ Ignorelist: null
     "data": {
      "source": "test-sw-c2960x-01",
      "target": "test-sw-c4451x-01"
-    },
+    }
+   },
    {
     "data": {
      "source": "test-sw-c4451x-01",
      "target": "FOB3B-1"
     }
-   }
    }
   ]
  }
