@@ -19,5 +19,5 @@ setuptools.setup(
     license="LICENSE.md",
     packages=setuptools.find_packages(),
     python_requires='>=3.7',
-    install_requires=['nil_lib'],
+    install_requires=['nil_lib', 'networkx', 'diffios', 'pyyaml'],
 )
