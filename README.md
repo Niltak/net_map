@@ -10,4 +10,3 @@ net_map(
     'cisco_user'    # Username
 )
 ```
-
