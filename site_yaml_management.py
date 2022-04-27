@@ -1,3 +1,4 @@
+import logging
 import nil_lib as ks
 
 
@@ -69,6 +70,50 @@ def site_yaml_changes(site_code, debug=None) -> None:
             'yaml',
             override=True
         )
+
+
+def site_yaml_update_hardware(site_code, user, pwd=None):
+    '''
+    '''
+    if not pwd:
+        pwd = ks.verify_pwd(user)
+
+    site_yaml = ks.file_loader(
+        f'site_info/{site_code}/{site_code}.yml')
+    switch_list = ks.format_site_yaml(site_code, user, pwd=pwd)
+
+    switch_list_output = ks.switch_list_send_command(
+        switch_list, 'show version', fsm=True)
+
+    for switch in switch_list_output[:]:
+        if not switch['name']:
+            switch_list_output.remove(switch)
+
+    for switch in site_yaml['Switchlist']:
+        found = ks.search_within_list(
+            switch['host'], switch_list_output, 'host')
+        if found:
+            switch['hardware'] = {}
+            if found['device_type'] == 'cisco_ios':
+                switch['hardware']['version'] = found['output'][0]['version']
+                switch['hardware']['model'] = found['output'][0]['hardware']
+                switch['hardware']['mac'] = found['output'][0]['mac']
+                switch['hardware']['serial'] = found['output'][0]['serial']
+            if found['device_type'] == 'cisco_nxos':
+                switch['hardware']['version'] = found['output'][0]['os']
+                switch['hardware']['model'] = [found['output'][0]['platform']]
+                switch['hardware']['mac'] = []
+                switch['hardware']['serial'] = [found['output'][0]['serial']]
+            if not found['device_type']:
+                logging.warning(f'Missing device_type from {found["name"]}')
+
+    ks.file_create(
+        site_code,
+        f'site_info/{site_code}/',
+        site_yaml,
+        file_extension='yml',
+        override=True
+    )
 
 
 if __name__ == "__main__":
