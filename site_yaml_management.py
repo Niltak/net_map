@@ -8,9 +8,9 @@ def site_yaml_compare(site_code) -> None:
     Creates a file dividing switch updates, adds, and removes.
     '''
     site_yaml = ks.file_loader(
-        f'site_info/{site_code}/{site_code}.yaml')
+        f'site_info/{site_code}/{site_code}.yml')
     new_site_yaml = ks.file_loader(
-        f'site_info/{site_code}/{site_code}_new.yaml')
+        f'site_info/{site_code}/{site_code}_new.yml')
 
     change_list = {
         "update": [],
@@ -45,9 +45,9 @@ def site_yaml_changes(site_code, debug=None) -> None:
     Uses the changelist to update the site yaml file.
     '''
     site_yaml = ks.file_loader(
-        f'site_info/{site_code}/{site_code}.yaml')
+        f'site_info/{site_code}/{site_code}.yml')
     change_list = ks.file_loader(
-        f'site_info/{site_code}/{site_code}_changelist.yaml')
+        f'site_info/{site_code}/{site_code}_changelist.yml')
 
     for switch in site_yaml['Switchlist']:
         found = ks.search_within_list(
