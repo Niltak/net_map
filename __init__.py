@@ -161,7 +161,8 @@ def net_map_cdp(switch_list, user, pwd=None):
                         if 'dest_host' in cdp.keys():
                             cdp['destination_host'] = cdp['dest_host']
                             del cdp['dest_host']
-                        if '.tcom.purdue.edu' in cdp['destination_host']:
+                        # TODO: Figure out how to do with dynamicly
+                        if '.wwt.com' in cdp['destination_host']:
                             cdp['destination_host'] = cdp['destination_host'].split('.', 1)[0]
                         crawler_cdp.append(cdp)
             switch_cdp['output'] = crawler_cdp
