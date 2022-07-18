@@ -4,9 +4,10 @@ import diffios
 import net_map
 import nil_lib as ks
 
-###
-### TODO: The whole module needs Refactoring
-###
+'''
+TODO: The whole module needs Refactoring
+'''
+
 
 def survey_site_list(site_list, user, inventory=None, pwd=None):
 
@@ -31,7 +32,8 @@ def survey_site_config_collect(site_code, user, pwd=None):
         pwd = ks.verify_pwd(user)
 
     switch_list = ks.format_site_yaml(site_code, user, pwd=pwd)
-    switch_list_configs = ks.switch_list_send_command(switch_list, ['do term len 0','sh run'])
+    switch_list_configs = ks.switch_list_send_command(
+        switch_list, ['do term len 0', 'sh run'])
 
     for switch_config in switch_list_configs:
         if switch_config['name']:
@@ -159,7 +161,8 @@ def survey_site_secureCRT(site_code, jumpbox, user):
 
     for switch in switch_list['Switchlist']:
         switch_ini = ini_data.copy()
-        switch_ini[index] = switch_ini[index].replace('[hostname]', switch['host'])
+        switch_ini[index] = switch_ini[index].replace(
+            '[hostname]', switch['host'])
         ks.file_create(
             switch['hostname'],
             file_dir,
@@ -172,7 +175,7 @@ def survey_site_secureCRT(site_code, jumpbox, user):
 def survey_site_check(
     site_code,
     user,
-    show_command, 
+    show_command,
     site_yaml=None,
     file_description=None,
     pwd=None):
@@ -204,7 +207,7 @@ def survey_site_check(
     #     file_name = '{0}_{1}'.format(site_code, file_description)
     # else:
     #     file_name = '{0}_{1}'.format(site_code, show_command)
-    
+
     # file_dir = 'site_info/{0}/'.format(site_code)
     # switch_list_data = {'Switchlist': switch_list_data}
 
