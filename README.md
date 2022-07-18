@@ -16,7 +16,7 @@ net_map(
 ##### Outputs:
 Will generate the following folders and files.
 
-*site_info/test/test.yaml* -> Used as a database of switches for the site
+*site_info/test/test.yml* -> Used as a database of switches for the site
 ```yaml
 Switchlist:
 - hostname: test-sw-c2960x-01
