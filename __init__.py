@@ -102,7 +102,7 @@ def net_map_cleanup(detected_switch_list, switch_list_cdp, switch_list_errored):
                 detected_switch['hostname'] = switch_cdp['name']
                 switch_cdp['host'] = detected_switch['host']
                 break
-    
+
     for switch_cdp in switch_list_cdp:
         for cdp in switch_cdp['output']:
             found = ks.search_within_list(
@@ -115,7 +115,7 @@ def net_map_cleanup(detected_switch_list, switch_list_cdp, switch_list_errored):
 
     locate_errors = switch_list_cdp.copy()
     for switch_cdp in locate_errors:
-        if not 'host' in switch_cdp.keys():
+        if 'host' not in switch_cdp.keys():
             switch_list_cdp.remove(switch_cdp)
             switch_name = 'Removing entry {0}!'.format(switch_cdp['name'])
             print(switch_name)
@@ -202,7 +202,7 @@ def net_map_active_list(switch_list_cdp, detected_switch_list, reroute_switch_li
                     'hostname'
                 )
                 if reroute_check:
-                    cdp['management_ip'] = reroute_check['host']  
+                    cdp['management_ip'] = reroute_check['host']
             if not ks.search_within_list(
                 cdp_hostname,
                 detected_switch_list,
@@ -244,12 +244,12 @@ def net_map_yaml(site_code, switch_list_cdp):
             'hostname': switch['name'],
             'host': switch['host'],
             'groups': ['EXAMPLE_PCS_BUSINESS', site_code.upper()],
-            'neighbor': switch['output'], 
+            'neighbor': switch['output'],
             'data': {
                 'location': 'EXAMPLE_DEPARTMENT',
                 'role': 'EXAMPLE_CSW_DSW_ASW',
                 'device_type': switch['device_type']
-        }}
+            }}
         inventory_list.append(inventory_item)
 
     inventory_list = {

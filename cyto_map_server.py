@@ -48,14 +48,16 @@ def cyto_map_server(cyto_file):
         html.Div(className='menu', style=styles['menu'], children=[
             dcc.Tabs(id='menu_tabs', children=[
                 dcc.Tab(label='Data Set', value='menu_data_set', children=[
-                    html.Div(id='menu_tab_data', style=styles['menu_tab'], children=[
-                        html.Blockquote('testing')
-                    ])
+                    html.Div(
+                        id='menu_tab_data',
+                        style=styles['menu_tab'],
+                        children=[html.Blockquote('testing')])
                 ]),
                 dcc.Tab(label='Controls', value='menu_controls', children=[
-                    html.Div(id='menu_tab_controls', style=styles['menu_tab'], children=[
-                        html.Blockquote('testing')
-                    ])
+                    html.Div(
+                        id='menu_tab_controls',
+                        style=styles['menu_tab'],
+                        children=[html.Blockquote('testing')])
                 ])
             ]),
             html.Div(id='download', children=[
@@ -77,13 +79,13 @@ def cyto_map_server(cyto_file):
         ]
     )
     def get_image(data, get_jpg, get_png, get_svg):
-        
+
         file_extension = None
         ctx = callback_context
         if ctx.triggered:
             output = ctx.triggered[0]['prop_id'].split('.')[0]
             file_extension = output[-3:]
-        
+
         return {
             'type': file_extension,
             'action': 'download',

@@ -61,7 +61,7 @@ def site_yaml_changes(site_code, debug=None) -> None:
 
     for switch_remove in change_list['remove']:
         site_yaml['Switchlist'].remove(switch_remove)
-            
+
     if not debug:
         ks.file_create(
             f'{site_code}',
