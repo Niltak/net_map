@@ -26,19 +26,16 @@ def survey_site_list(site_list, user, inventory=None, pwd=None):
             survey_site_inventory(site_code, user, pwd=pwd)
 
 
-def survey_site_config_collect(site_code, user, yaml_inventory=None, pwd=None):
+def survey_site_config_collect(site_code, user, pwd=None):
     if not pwd:
         pwd = ks.verify_pwd(user)
 
-    if not yaml_inventory:
-        yaml_inventory = 'site_info/{0}/{0}.yaml'.format(site_code)
-
-    switch_list = ks.format_site_yaml(yaml_inventory, user, pwd=pwd)
-    switch_list_configs = ks.switch_list_send_command(switch_list, 'sh run')
+    switch_list = ks.format_site_yaml(site_code, user, pwd=pwd)
+    switch_list_configs = ks.switch_list_send_command(switch_list, ['do term len 0','sh run'])
 
     for switch_config in switch_list_configs:
         if switch_config['name']:
-            file_dir = 'site_info/{0}/configs/'.format(site_code)
+            file_dir = f'site_info/{site_code}/configs/dump/'
             file_name = switch_config['name']
 
             ks.file_create(
@@ -109,8 +106,6 @@ def survey_site_inventory(site_code, user, site_yaml=None, pwd=None):
 
     if not pwd:
         pwd = ks.verify_pwd(user)
-    if not site_yaml:
-        site_yaml = f'site_info/{site_code}/{site_code}.yaml'
 
     switch_list = ks.format_site_yaml(
         site_yaml,
@@ -147,7 +142,7 @@ def survey_site_secureCRT(site_code, jumpbox, user):
     with open(baseline, 'r') as baseline_ini:
         ini_data = baseline_ini.readlines()
 
-    yaml_inventory = 'site_info/{0}/{0}.yaml'.format(site_code)
+    yaml_inventory = 'site_info/{0}/{0}.yml'.format(site_code)
     with open(yaml_inventory, 'r') as yaml_file:
         switch_list = yaml.load(yaml_file, Loader=yaml.FullLoader)
 
