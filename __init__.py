@@ -27,8 +27,7 @@ def net_map(
     switch_list_cdp, switch_list_errored = net_map_cdp(
         target_switch,
         user,
-        pwd=pwd
-    )
+        pwd=pwd)
 
     if not switch_list_cdp:
         print(f'Could not connect to the main switch {target_switch}!')
@@ -36,8 +35,7 @@ def net_map(
 
     detected_switch_list = [{
         'host': target_switch,
-        'hostname': switch_list_cdp[0]['name']
-    }]
+        'hostname': switch_list_cdp[0]['name']}]
 
     if not site_code:
         site_code = switch_list_cdp[0]['name'].split('-')[0]
@@ -48,8 +46,7 @@ def net_map(
         switch_list, detected_switch_list = net_map_active_list(
             switch_list_cdp,
             detected_switch_list,
-            reroute_switch_list
-        )
+            reroute_switch_list)
 
         if not switch_list:
             break
@@ -61,8 +58,7 @@ def net_map(
         crawler_list_cdp, crawler_list_errored = net_map_cdp(
             switch_list,
             user,
-            pwd=pwd
-        )
+            pwd=pwd)
 
         switch_list_errored += crawler_list_errored
         switch_list_cdp += crawler_list_cdp
@@ -70,46 +66,54 @@ def net_map(
     detected_switch_list, switch_list_cdp, switch_list_errored = net_map_cleanup(
         detected_switch_list,
         switch_list_cdp,
-        switch_list_errored
-    )
+        switch_list_errored)
 
     net_map_yaml(
         site_code,
-        switch_list_cdp
-    )
+        switch_list_cdp)
 
     net_map_cyto(
         site_code,
         switch_list_cdp,
         switch_list_errored,
-        port_display
-    )
+        port_display)
 
     if debug:
         net_map_test_output(
             site_code,
             detected_switch_list,
             switch_list_cdp,
-            switch_list_errored
-        )
+            switch_list_errored)
 
 
 def net_map_cleanup(detected_switch_list, switch_list_cdp, switch_list_errored):
-
-    for detected_switch in detected_switch_list:
+    '''
+    '''
+    captured_list = []
+    for detected_switch in detected_switch_list[:]:
+        found = False
         for switch_cdp in switch_list_cdp:
-            if switch_cdp['name'] in detected_switch['hostname']:
-                detected_switch['hostname'] = switch_cdp['name']
+            if detected_switch['hostname'].startswith(switch_cdp['name']):
+                if found:
+                    if len(found['name']) > len(switch_cdp['name']):
+                        continue
                 switch_cdp['host'] = detected_switch['host']
-                break
+                found = switch_cdp
+                if found['name'] == detected_switch['hostname']:
+                    break
+        if found:
+            if found['host'] in captured_list:
+                switch_list_cdp.remove(found)
+                continue
+            detected_switch['hostname'] = found['name']
+        captured_list.append(detected_switch['host'])
 
     for switch_cdp in switch_list_cdp:
         for cdp in switch_cdp['output']:
             found = ks.search_within_list(
                 cdp['management_ip'],
                 detected_switch_list,
-                'host'
-            )
+                'host')
             if found:
                 cdp['destination_host'] = found['hostname']
 
@@ -125,8 +129,7 @@ def net_map_cleanup(detected_switch_list, switch_list_cdp, switch_list_errored):
             switch = ks.search_within_list(
                 switch_errored['output'],
                 detected_switch_list,
-                'host'
-            )
+                'host')
             switch_errored['hostname'] = switch['hostname']
             switch_errored['host'] = switch_errored.pop('output')
 
