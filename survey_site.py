@@ -44,8 +44,7 @@ def survey_site_config_collect(site_code, user, pwd=None):
                 file_name,
                 file_dir,
                 switch_config['output'],
-                override=True
-            )
+                override=True)
 
 # Arconic site_info groupings
 
@@ -104,13 +103,13 @@ def survey_site_config_compare(file_dir, output_dir=None, filter=None):
             )
 
 
-def survey_site_inventory(site_code, user, site_yaml=None, pwd=None):
+def survey_site_inventory(site_code, user, pwd=None):
 
     if not pwd:
         pwd = ks.verify_pwd(user)
 
     switch_list = ks.format_site_yaml(
-        site_yaml,
+        site_code,
         user,
         pwd=pwd
     )
@@ -133,9 +132,48 @@ def survey_site_inventory(site_code, user, site_yaml=None, pwd=None):
         file_name,
         file_dir,
         switch_inventory,
-        file_extension='yaml',
+        file_extension='yml',
         override=True
     )
+
+
+def survey_site_hardware(site_code, user, pwd=None):
+    '''
+    '''
+    if not pwd:
+        pwd = ks.verify_pwd(user)
+
+    switch_list = ks.format_site_yaml(
+        site_code, user, pwd=pwd)
+
+    switch_list = ks.switch_list_send_command(
+        switch_list, 'show version', fsm=True)
+
+    hardware_list = []
+    for switch in switch_list[:]:
+        if not switch['name']:
+            switch['name'] = switch['host']
+            del switch['host']
+            continue
+
+        switch['data'] = switch['output']
+        del switch['output']
+        del switch['host']
+        del switch['device_type']
+
+        for output in switch['data']:
+            if 'hardware' in output.keys():
+                hardware_list += output['hardware']
+            elif 'platform' in output.keys():
+                hardware_list.append(output['platform'])
+
+    file_name = f'{site_code}_hardware'
+    file_dir = f'site_info/{site_code}/'
+    data = {'Switchlist': switch_list, 'Hardware': hardware_list}
+
+    ks.file_create(
+        file_name, file_dir, data,
+        file_extension='yml', override=True)
 
 
 def survey_site_secureCRT(site_code, jumpbox, user):
