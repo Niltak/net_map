@@ -26,17 +26,17 @@ def get_site_configs(
     '''
     '''
     switch_list = format_site_yaml(site_code, user, pwd=pwd)
-    switch_list_configs = switch_list_send_command(
+    switch_configs = switch_list_send_command(
         switch_list, ['do term len 0', 'sh run'])
 
-    for switch_config in switch_list_configs:
-        if switch_config['name']:
+    for config in switch_configs:
+        if config['name']:
             file_dir = f'site_info/{site_code}/configs/dump/'
-            file_name = switch_config['name']
+            file_name = config['name']
 
             file_create(
                 file_name, file_dir,
-                switch_config['output'], override=True)
+                config['output'], override=True)
 
 
 def get_site_inventory(
