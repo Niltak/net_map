@@ -72,7 +72,7 @@ def site_yaml_changes(site_code, debug=None) -> None:
         )
 
 
-def site_yaml_update_hardware(site_code, user, pwd=None):
+def update_hardware(site_code, user, pwd=None):
     '''
     '''
     if not pwd:
@@ -108,12 +108,44 @@ def site_yaml_update_hardware(site_code, user, pwd=None):
                 logging.warning(f'Missing device_type from {found["name"]}')
 
     ks.file_create(
-        site_code,
-        f'site_info/{site_code}/',
-        site_yaml,
-        file_extension='yml',
-        override=True
-    )
+        site_code, f'site_info/{site_code}/', site_yaml,
+        file_extension='yml', override=True)
+
+
+def update_neighbor_list(site_code, user, pwd=None) -> None:
+    '''
+    '''
+    site_yaml = ks.file_loader(f'site_info/{site_code}/{site_code}.yml')
+    switch_list = ks.format_site_yaml(
+        site_code, user, pwd=pwd)
+
+    cdp_info = ks.switch_list_send_command(
+        switch_list, 'show cdp neighbors detail', fsm=True)
+
+    unused_keys = [
+        'management_ip', 'platform',
+        'remote_port', 'software_version',
+        'capabilities', 'interface_ip',
+        'sysname', 'mgmt_ip', 'version']
+                        
+    for device in cdp_info[:]:
+        if isinstance(device['output'], list):
+            for cdp in device['output'][:]:
+                if 'switch' not in cdp['capabilities'].lower():
+                    device['output'].remove(cdp)
+                else:
+                    for key in unused_keys:
+                        if key in cdp.keys():
+                            del cdp[key]
+            for entry in site_yaml['Switchlist']:
+                if device['host'] == entry['host']:
+                    entry['neighbor'] = device['output']
+
+        cdp_info.remove(device)
+
+    ks.file_create(
+        f'{site_code}', f'site_info/{site_code}', site_yaml,
+        file_extension='yml', override=True)
 
 
 if __name__ == "__main__":
