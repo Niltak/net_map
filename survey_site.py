@@ -75,8 +75,9 @@ def get_site_hardware(
     hardware_list = []
     for switch in switch_list[:]:
         if not switch['name']:
-            switch['name'] = switch['host']
-            del switch['host']
+            # TODO: CONNECTION ISSUE LIST
+            switch['name'] = switch['output']
+            del switch['output']
             continue
 
         switch['data'] = switch['output']
